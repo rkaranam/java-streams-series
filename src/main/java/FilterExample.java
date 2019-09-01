@@ -19,11 +19,11 @@ public class FilterExample {
             }
         }
 
-        System.out.println("**** Imperative Style: ****");
+        System.out.println("**** Functional Style: ****");
 
         founders.stream()
-                .filter(FilterExample::isNotLinus)
-                .forEach(System.out::println);
+                .filter(FilterExample::isNotLinus) // filter uses Predicate interface
+                .forEach(System.out::println); // forEach uses Consumer interface
 
     }
 

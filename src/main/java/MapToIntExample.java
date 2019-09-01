@@ -70,7 +70,7 @@ public class MapToIntExample {
                 .filter(MapToIntExample::isNotLinus)    // filter uses Predicate interface
                 .map(Person::new)                       // map uses Function interface
                 .forEach(System.out::println);          // forEach uses Consumer interface
-                                                        // forEach is a terminal operation means stream ends here
+        // forEach is a terminal operation means stream ends here
 
         List<Person> usersList = founders.stream()
                 .filter(MapToIntExample::isNotLinus)    // filter uses Predicate interface
@@ -99,23 +99,23 @@ public class MapToIntExample {
         marvelHeroes.put("Ant Man", 49);
 
         long agelessHeroes = marvelHeroes.keySet().stream()
-                .map(name -> {
-                    return new Person(name, marvelHeroes.get(name));
-                })
-                .filter(x -> x.getAge() >= 100)
+                .map(name -> new Person(name, marvelHeroes.get(name)))
+                .filter(MapToIntExample::isImmortal)
                 .count();
 
         System.out.println("Count of Immortal Marvel Heroes: " + agelessHeroes);
 
         List<Person> immortals = marvelHeroes.keySet().stream()
-                .map(name -> {
-                    return new Person(name, marvelHeroes.get(name));
-                })
-                .filter(x -> x.getAge() >= 100)
+                .map(name -> new Person(name, marvelHeroes.get(name)))
+                .filter(MapToIntExample::isImmortal)
                 .collect(Collectors.toList());
 
         immortals.forEach(System.out::println);
 
+    }
+
+    private static boolean isImmortal(Person person) {
+        return person.getAge() >= 100;
     }
 
     private static boolean isNotLinus(String name) {

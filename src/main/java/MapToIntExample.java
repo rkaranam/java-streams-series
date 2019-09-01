@@ -1,8 +1,10 @@
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-public class MapExample {
+public class MapToIntExample {
 
     static class Person {
 
@@ -12,6 +14,11 @@ public class MapExample {
         Person(String name) {
             this.name = name;
             this.age = 60;
+        }
+
+        Person(String name, Integer age) {
+            this.name = name;
+            this.age = age;
         }
 
         public String getName() {
@@ -60,19 +67,54 @@ public class MapExample {
         System.out.println("**** Functional Style: ****");
 
         founders.stream()
-                .filter(MapExample::isNotLinus)         // filter uses Predicate interface
+                .filter(MapToIntExample::isNotLinus)    // filter uses Predicate interface
                 .map(Person::new)                       // map uses Function interface
                 .forEach(System.out::println);          // forEach uses Consumer interface
                                                         // forEach is a terminal operation means stream ends here
 
         List<Person> usersList = founders.stream()
-                .filter(MapExample::isNotLinus)         // filter uses Predicate interface
+                .filter(MapToIntExample::isNotLinus)    // filter uses Predicate interface
                 .map(Person::new)                       // map uses Function interface
                 .collect(Collectors.toList());          // collect is also a terminal operation
 
-        System.out.println("**** Using Stream collect(): ****");
+        System.out.println("**** Using Stream mapToInt(): ****");
 
-        usersList.forEach(System.out::println);
+        int agesSum = usersList.stream()
+                .mapToInt(Person::getAge)
+                .sum();
+
+        System.out.println("Sum of their ages: " + agesSum);
+
+        System.out.println("**** Using Stream map and filter: ****");
+
+        Map<String, Integer> marvelHeroes = new HashMap<>();
+        marvelHeroes.put("Iron Man", 45);
+        marvelHeroes.put("Captain America", 100);
+        marvelHeroes.put("Thor", Integer.MAX_VALUE);
+        marvelHeroes.put("Thanos", Integer.MAX_VALUE);
+        marvelHeroes.put("Groot", 4);
+        marvelHeroes.put("Hulk", 49);
+        marvelHeroes.put("Scarlet Witch", 29);
+        marvelHeroes.put("Black Widow", 34);
+        marvelHeroes.put("Ant Man", 49);
+
+        long agelessHeroes = marvelHeroes.keySet().stream()
+                .map(name -> {
+                    return new Person(name, marvelHeroes.get(name));
+                })
+                .filter(x -> x.getAge() >= 100)
+                .count();
+
+        System.out.println("Count of Immortal Marvel Heroes: " + agelessHeroes);
+
+        List<Person> immortals = marvelHeroes.keySet().stream()
+                .map(name -> {
+                    return new Person(name, marvelHeroes.get(name));
+                })
+                .filter(x -> x.getAge() >= 100)
+                .collect(Collectors.toList());
+
+        immortals.forEach(System.out::println);
 
     }
 

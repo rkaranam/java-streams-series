@@ -3,7 +3,7 @@ import java.util.List;
 
 public class FilterExample {
     public static void main(String[] args) {
-        List<String> names = Arrays.asList(
+        List<String> founders = Arrays.asList(
                 "James Gosling",
                 "Rod Johnson",
                 "Linus Torvalds",
@@ -11,12 +11,23 @@ public class FilterExample {
                 "Brendan Eich"
         );
 
-        // Java for-each
-        for (String founder : names) {
-            System.out.println(founder);
+        System.out.println("**** Imperative Style: ****");
+
+        for (String founder : founders) {
+            if (isNotLinus(founder)) {
+                System.out.println(founder);
+            }
         }
 
-        names.forEach(System.out::println);
+        System.out.println("**** Imperative Style: ****");
 
+        founders.stream()
+                .filter(FilterExample::isNotLinus)
+                .forEach(System.out::println);
+
+    }
+
+    private static boolean isNotLinus(String name) {
+        return !name.equals("Linus Torvalds");
     }
 }

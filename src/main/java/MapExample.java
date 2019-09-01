@@ -1,6 +1,6 @@
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class MapExample {
 
@@ -32,9 +32,9 @@ public class MapExample {
 
         @Override
         public String toString() {
-            return "Person{" +
-                    "name='" + name + '\'' +
-                    ", age=" + age +
+            return "Person {" +
+                    "name = '" + name + '\'' +
+                    ", age = " + age +
                     '}';
         }
     }
@@ -60,14 +60,19 @@ public class MapExample {
         System.out.println("**** Functional Style: ****");
 
         founders.stream()
-                .filter(MapExample::isNotLinus) // filter uses Predicate interface
-                .map(new Function<String, Person>() {
-                    @Override
-                    public Person apply(String str) {
-                        return new Person(str);
-                    }
-                })
-                .forEach(System.out::println); // forEach uses Consumer interface
+                .filter(MapExample::isNotLinus)         // filter uses Predicate interface
+                .map(Person::new)                       // map uses Function interface
+                .forEach(System.out::println);          // forEach uses Consumer interface
+                                                        // forEach is a terminal operation means stream ends here
+
+        List<Person> usersList = founders.stream()
+                .filter(MapExample::isNotLinus)         // filter uses Predicate interface
+                .map(Person::new)                       // map uses Function interface
+                .collect(Collectors.toList());          // collect is also a terminal operation
+
+        System.out.println("**** Using Stream collect(): ****");
+
+        usersList.forEach(System.out::println);
 
     }
 

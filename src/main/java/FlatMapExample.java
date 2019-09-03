@@ -86,26 +86,16 @@ public class FlatMapExample {
         System.out.println("Functional Style: ");
 
         // Identify movies where Ant Man has starred
-        Optional<Object> antManMovies = marvelMovies.stream()
-                .map(new Function<MarvelMovie, Stream<String>>() {
-                    @Override
-                    public Stream<String> apply(MarvelMovie marvelMovie) {
-                        return marvelMovie.getCharacters().stream();
-                    }
-                })
-                .flatMap(new Function<Stream<String>, Stream<?>>() {
-                    @Override
-                    public Stream<?> apply(Stream<String> charactersStream) {
-                        return charactersStream.filter(new Predicate<String>() {
-                            @Override
-                            public boolean test(String character) {
-                                return character.equals("Iron Man");
-                            }
-                        });
-                    }
-                })
+        Optional<String> antManMovies = marvelMovies.stream()
+                .map(marvelMovie -> marvelMovie.getCharacters().stream())
+                .flatMap(stringStream -> stringStream.filter(s -> s.equals("Ant Man")))
                 .findAny();
 
-        antManMovies.ifPresent(movie -> System.out.println(movie));
+        antManMovies.ifPresent(System.out::println);
+
+        List<Integer> myMarks = Arrays.asList(89, 95, null, 48, 63);
+
+        myMarks.forEach(mark -> Optional.ofNullable(mark).ifPresent(System.out::println));
+
     }
 }

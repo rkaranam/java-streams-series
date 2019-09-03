@@ -3,6 +3,10 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class FlatMapExample {
 
@@ -78,5 +82,30 @@ public class FlatMapExample {
         );
 
         marvelMovies.forEach(System.out::println);
+
+        System.out.println("Functional Style: ");
+
+        // Identify movies where Ant Man has starred
+        Optional<Object> antManMovies = marvelMovies.stream()
+                .map(new Function<MarvelMovie, Stream<String>>() {
+                    @Override
+                    public Stream<String> apply(MarvelMovie marvelMovie) {
+                        return marvelMovie.getCharacters().stream();
+                    }
+                })
+                .flatMap(new Function<Stream<String>, Stream<?>>() {
+                    @Override
+                    public Stream<?> apply(Stream<String> charactersStream) {
+                        return charactersStream.filter(new Predicate<String>() {
+                            @Override
+                            public boolean test(String character) {
+                                return character.equals("Iron Man");
+                            }
+                        });
+                    }
+                })
+                .findAny();
+
+        antManMovies.ifPresent(movie -> System.out.println(movie));
     }
 }
